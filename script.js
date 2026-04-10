@@ -107,7 +107,7 @@ revealEls.forEach(el => revealObserver.observe(el));
       btn.setAttribute('aria-label', `Go to slide ${i + 1}`);
       btn.addEventListener('click', () => {
         goTo(i * getVisibleCount(), true);
-        resetTimer();
+        // Timer keeps running uninterrupted
       });
       dotsEl.appendChild(btn);
     }
@@ -173,14 +173,12 @@ revealEls.forEach(el => revealObserver.observe(el));
   carousel.addEventListener('touchend', e => {
     const diff = touchStartX - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) {
+      // Navigate on swipe but do NOT reset timer — carousel keeps its own rhythm
       diff > 0 ? next() : goTo(Math.max(currentIndex - 1, 0), true);
-      resetTimer();
     }
   }, { passive: true });
 
-  /* ── Pause on hover ── */
-  carousel.addEventListener('mouseenter', () => clearInterval(autoTimer));
-  carousel.addEventListener('mouseleave', () => { if (!allVisible) startTimer(); });
+  /* ── Hover does NOT pause the carousel ── */
 
   /* ── Initialise ── */
   setupClones();
